@@ -23,6 +23,7 @@ module1 = module_from_name(mem.process_handle, "halo1.dll").lpBaseOfDll
 primary_offsets = [0X28A]
 fire_rate_offsets = [0X23A]
 shield_offsets = [0XA0]
+plasma_fire_rate_offsets = [0X204]
 # This fucking sucked to find
 noclip_offsets = [0X4D8]
 
@@ -43,6 +44,11 @@ def multi_run_117():
 
 def multi_run_clip():
     new_thread = Thread(target=fuck_walls, daemon=True)
+    new_thread.start()
+
+
+def multi_run_plasma():
+    new_thread = Thread(target=plasma, daemon=True)
     new_thread.start()
 
 
@@ -71,6 +77,19 @@ def fuck_walls():
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("C"):
+            mem.write_int(addr1, 0x0)
+            break
+
+
+def plasma():
+    addr1 = getpointeraddress(module1 + 0x01C38880, plasma_fire_rate_offsets)
+
+    while 1:
+        try:
+            mem.write_int(addr1, 0x0)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("F1"):
             mem.write_int(addr1, 0x0)
             break
 
@@ -104,6 +123,8 @@ button1 = tk.Button(root, text="Haha gun go brrr", bg='black', fg='white', comma
 button1.grid(row=1, column=0)
 button1 = tk.Button(root, text="No Clip", bg='black', fg='white', command=multi_run_clip)
 button1.grid(row=2, column=0)
+button1 = tk.Button(root, text="Plasma Firerate", bg='black', fg='white', command=multi_run_plasma)
+button1.grid(row=3, column=0)
 button4 = tk.Button(root, text="Exit", bg='white', fg='black', command=root.destroy)
 button4.grid(row=4, column=0)
 label1 = tk.Label(master=root, text='- Show GUI', bg='red', fg='black')
