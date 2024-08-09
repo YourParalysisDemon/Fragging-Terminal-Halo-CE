@@ -129,6 +129,6 @@ link1.bind("<Button-1>", lambda e: callback("https://steamcommunity.com/profiles
 keyboard.add_hotkey("-", show)
 keyboard.add_hotkey("+", hide)
 keyboard.add_hotkey("5", multi_run_117)
-keyboard.add_hotkey("V", fuck_walls)
+keyboard.add_hotkey("V", multi_run_clip)
 keyboard.add_hotkey("K", root.destroy)
 root.mainloop()
