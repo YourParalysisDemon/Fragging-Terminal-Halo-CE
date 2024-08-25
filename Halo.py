@@ -25,6 +25,7 @@ fire_rate_offsets = [0X23A]
 shield_offsets = [0XA0]
 plasma_fire_rate_offsets = [0X204]
 grenade_offsets = [0X2FC]
+flashlight_offsets = [0X10, 0X10, 0X35C]
 # This fucking sucked to find
 noclip_offsets = [0X4D8]
 
