@@ -24,6 +24,7 @@ primary_offsets = [0X28A]
 fire_rate_offsets = [0X23A]
 shield_offsets = [0XA0]
 plasma_fire_rate_offsets = [0X204]
+grenade_offsets = [0X2FC]
 # This fucking sucked to find
 noclip_offsets = [0X4D8]
 
@@ -57,16 +58,18 @@ def multi_run_plasma():
     new_thread.start()
 
 
-def John117():
+def John117():  
     addr1 = getpointeraddress(module1 + 0x01C38880, primary_offsets)
     addr2 = getpointeraddress(module1 + 0x01C38880, fire_rate_offsets)
     addr3 = getpointeraddress(module1 + 0x01C35AB0, shield_offsets)
+    addr4 = getpointeraddress(module1 + 0x01C35AB0, grenade_offsets)
 
     while 1:
         try:
             mem.write_int(addr1, 0x100)
             mem.write_int(addr2, 0xFFFFFFFF)
             mem.write_int(addr3, 0x47960000)
+            mem.write_int(addr4, 0x100)
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("F1"):
