@@ -7,7 +7,7 @@ from threading import Thread
 from pymem import *
 from pymem.process import *
 from pymem.ptypes import RemotePointer
-
+# Password 
 while True:
     password = input("Enter password ")
     if password == "117":
@@ -15,11 +15,11 @@ while True:
         break
     else:
         print("Try again retard")
-
+# Game were hacking 
 mem = Pymem("MCC-Win64-Shipping")
-
+# DLL 
 module1 = module_from_name(mem.process_handle, "halo1.dll").lpBaseOfDll
-
+# Offsets 
 primary_offsets = [0X28A]
 fire_rate_offsets = [0X23A]
 shield_offsets = [0XA0]
@@ -38,7 +38,7 @@ def getpointeraddress(base, offsets):
         else:
             return remote_pointer.value + offset
 
-
+# Threads 
 def multi_run_117():
     new_thread = Thread(target=John117, daemon=True)
     new_thread.start()
@@ -115,7 +115,7 @@ def plasma():
             mem.write_int(addr1, 0x0)
             break
 
-
+# GUI 
 pygame.init()
 pygame.mixer_music.load("music/mod.mp3")
 pygame.mixer_music.play(1)
@@ -147,10 +147,10 @@ button2 = tk.Button(root, text="No Clip", bg='black', fg='white', command=multi_
 button2.grid(row=3, column=0)
 button3 = tk.Button(root, text="Plasma Firerate", bg='black', fg='white', command=multi_run_plasma)
 button3.grid(row=2, column=0)
-button3 = tk.Button(root, text="Fuck Gravity", bg='black', fg='white', command=multi_run_gravity)
-button3.grid(row=4, column=0)
-button4 = tk.Button(root, text="Exit", bg='white', fg='black', command=root.destroy)
-button4.grid(row=5, column=0)
+button4 = tk.Button(root, text="Fuck Gravity", bg='black', fg='white', command=multi_run_gravity)
+button4.grid(row=4, column=0)
+button5 = tk.Button(root, text="Exit", bg='white', fg='black', command=root.destroy)
+button5.grid(row=5, column=0)
 label1 = tk.Label(master=root, text='- Show GUI', bg='red', fg='black')
 label1.grid(row=0, column=3)
 label2 = tk.Label(master=root, text='+ Hide GUI', bg='red', fg='black')
