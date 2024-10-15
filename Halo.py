@@ -66,22 +66,37 @@ def multi_run_hands():
     new_thread.start()
 
 
+def multi_run_speed():
+    new_thread = Thread(target=speed, daemon=True)
+    new_thread.start()
+
+
 def John117():
     addr1 = getpointeraddress(module1 + 0x01C38880, primary_offsets)
     addr2 = getpointeraddress(module1 + 0x01C38880, fire_rate_offsets)
     addr3 = getpointeraddress(module1 + 0x01C35AB0, shield_offsets)
-    addr4 = getpointeraddress(module1 + 0x01C40480, player_speed_offsets)
 
     while 1:
         try:
             mem.write_int(addr1, 0x100)
             mem.write_int(addr2, 0xFFFFFFFF)
             mem.write_int(addr3, 0x47960000)
-            mem.write_int(addr4, 0x41700000)
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("F1"):
-            mem.write_int(addr4, 0x3f800000)
+            break
+
+
+def speed():
+    addr1 = getpointeraddress(module1 + 0x01C40480, player_speed_offsets)
+
+    while 1:
+        try:
+            mem.write_int(addr1, 0x41700000)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("F1"):
+            mem.write_int(addr1, 0x3f800000)
             break
 
 
@@ -154,7 +169,7 @@ root.wm_iconphoto(False, photo)
 root.attributes("-topmost", True)
 root.title("Fragging Terminal")
 root.configure(background='dark red')
-root.geometry("265x205")
+root.geometry("265x230")
 
 
 def callback(url):
@@ -179,8 +194,10 @@ button3 = tk.Button(root, text="Fuck Gravity", bg='black', fg='white', command=m
 button3.grid(row=4, column=0)
 button4 = tk.Button(root, text="Throw Hands", bg='black', fg='white', command=multi_run_hands)
 button4.grid(row=5, column=0)
-button5 = tk.Button(root, text="Exit", bg='white', fg='black', command=root.destroy)
+button5 = tk.Button(root, text="Speed", bg='black', fg='white', command=multi_run_speed)
 button5.grid(row=6, column=0)
+button5 = tk.Button(root, text="Exit", bg='white', fg='black', command=root.destroy)
+button5.grid(row=7, column=0)
 label1 = tk.Label(master=root, text='- Show GUI', bg='red', fg='black')
 label1.grid(row=0, column=3)
 label2 = tk.Label(master=root, text='+ Hide GUI', bg='red', fg='black')
@@ -198,7 +215,7 @@ label5.grid(row=6, column=3)
 label6 = tk.Label(master=root, text='Main Loops', bg='red', fg='black')
 label6.grid(row=0, column=0)
 link1 = tk.Label(root, text="Your Sleep Paralysis Demon", bg="black", fg="red", cursor="hand2")
-link1.grid(row=7, column=0)
+link1.grid(row=8, column=0)
 link1.bind("<Button-1>", lambda e: callback("https://steamcommunity.com/profiles/76561198259829950/"))
 
 keyboard.add_hotkey("-", show)
