@@ -30,6 +30,7 @@ noclip_offsets = [0X4D8]
 melee1_offsets = [0X512]
 melee2_offsets = [0X513]
 player_speed_offsets = [0X10C]
+bullet_spread_offsets = [0X1B]
 
 
 def getpointeraddress(base, offsets):
@@ -75,12 +76,14 @@ def John117():
     addr1 = getpointeraddress(module1 + 0x01C38880, primary_offsets)
     addr2 = getpointeraddress(module1 + 0x01C38880, fire_rate_offsets)
     addr3 = getpointeraddress(module1 + 0x01C35AB0, shield_offsets)
+    addr4 = getpointeraddress(module1 + 0x01C38880, bullet_spread_offsets)
 
     while 1:
         try:
             mem.write_int(addr1, 0x100)
             mem.write_int(addr2, 0xFFFFFFFF)
             mem.write_int(addr3, 0x47960000)
+            mem.write_int(addr4, 0x00000164)
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("F1"):
@@ -146,13 +149,14 @@ def plasma():
     addr1 = getpointeraddress(module1 + 0x01C38880, plasma_fire_rate_offsets)
     addr2 = getpointeraddress(module1 + 0x01C38880, fire_rate_offsets)
     addr3 = getpointeraddress(module1 + 0x01C38880, plasma_ammo_offsets)
+    addr4 = getpointeraddress(module1 + 0x01C38880, bullet_spread_offsets)
 
     while 1:
         try:
             mem.write_int(addr1, 0xFFFFFFFF)
             mem.write_int(addr2, 0xFFFFFFFF)
             mem.write_int(addr3, 0x3f4ccccd)
-
+            mem.write_int(addr4, 0x00000164)
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("F1"):
