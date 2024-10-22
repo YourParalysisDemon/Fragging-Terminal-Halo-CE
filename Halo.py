@@ -8,6 +8,7 @@ from pymem import *
 from pymem.process import *
 from pymem.ptypes import RemotePointer
 
+# Password 
 while True:
     password = input("Enter password ")
     if password == "117":
@@ -16,23 +17,30 @@ while True:
     else:
         print("Try again retard")
 
+# Game were hacking
 mem = Pymem("MCC-Win64-Shipping")
-
+# DLL of said game
 module1 = module_from_name(mem.process_handle, "halo1.dll").lpBaseOfDll
 
+# New graphics
 primary_offsets = [0X28A]
 fire_rate_offsets = [0X23A]
 shield_offsets = [0XA0]
 plasma_fire_rate_offsets = [0X204]
 plasma_ammo_offsets = [0X208]
-# This fucking sucked to find
+
+# These fucking sucked to find
 noclip_offsets = [0X4D8]
 melee1_offsets = [0X512]
 melee2_offsets = [0X513]
 player_speed_offsets = [0X10C]
 bullet_spread_offsets = [0X1B]
-# Old graphics wip 01C38900
+
+# Old graphics 01C38900
 primary_offsets2 = [0X28A]
+shield_offsets2 = []
+plasma_fire_rate_offsets2 = []
+plasma_ammo_offsets2 = []
 
 
 def getpointeraddress(base, offsets):
@@ -44,6 +52,7 @@ def getpointeraddress(base, offsets):
             return remote_pointer.value + offset
 
 
+# Threads 
 def multi_run_117():
     new_thread = Thread(target=John117, daemon=True)
     new_thread.start()
@@ -74,6 +83,7 @@ def multi_run_speed():
     new_thread.start()
 
 
+# Functions 
 def John117():
     addr1 = getpointeraddress(module1 + 0x01C38880, primary_offsets)
     addr2 = getpointeraddress(module1 + 0x01C38880, fire_rate_offsets)
@@ -165,6 +175,7 @@ def plasma():
             break
 
 
+# Are GUI 
 pygame.init()
 pygame.mixer_music.load("music/mod.mp3")
 pygame.mixer_music.play(1)
@@ -223,7 +234,7 @@ label6.grid(row=0, column=0)
 link1 = tk.Label(root, text="Your Sleep Paralysis Demon", bg="black", fg="red", cursor="hand2")
 link1.grid(row=8, column=0)
 link1.bind("<Button-1>", lambda e: callback("https://steamcommunity.com/profiles/76561198259829950/"))
-
+# Hot keys 
 keyboard.add_hotkey("-", show)
 keyboard.add_hotkey("+", hide)
 keyboard.add_hotkey("5", multi_run_117)
