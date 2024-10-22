@@ -31,6 +31,8 @@ melee1_offsets = [0X512]
 melee2_offsets = [0X513]
 player_speed_offsets = [0X10C]
 bullet_spread_offsets = [0X1B]
+# Old graphics wip 01C38900
+primary_offsets2 = [0X28A]
 
 
 def getpointeraddress(base, offsets):
