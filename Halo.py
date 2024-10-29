@@ -41,6 +41,8 @@ primary_offsets2 = [0X28A]
 shield_offsets2 = []
 plasma_fire_rate_offsets2 = []
 plasma_ammo_offsets2 = []
+fire_rate_offsets2 = [0X23A]
+
 
 
 def getpointeraddress(base, offsets):
