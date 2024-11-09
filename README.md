@@ -2,7 +2,7 @@ External python hack for Halo CE.
 
 Note only works on new graphics for now 08/09/2024
 
-A compiled exe is available in the zip file if you don't want to comile the base code yourself.
+A compiled exe is available in the zip file if you don't want to compile the base code yourself.
 
 https://github.com/user-attachments/assets/218e4b49-9e24-489a-a6ca-6e5513b92158
 
