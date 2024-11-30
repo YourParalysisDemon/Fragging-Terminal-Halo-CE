@@ -43,6 +43,9 @@ shield_offsets2 = [0XA0]
 fire_rate_offsets2 = [0X23A]
 plasma_ammo_offsets2 = []
 noclip_offsets2 = [0X4D8]
+X_offsets = [0X1C]  # 01C35950
+Y_offsets = [0X18]  # 01C35950
+Z_offsets = [0X20]
 
 
 def getpointeraddress(base, offsets):
@@ -238,6 +241,43 @@ def plasma():
             break
 
 
+#  Tele functions
+
+def tele_up():
+    addr = getpointeraddress(module1 + 0x01C35950, Z_offsets)
+    if addr is not None:
+        try:
+            mem.write_int(addr, 0x42480000)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+
+
+def tele_halo():
+    addr = getpointeraddress(module1 + 0x01C35950, Z_offsets)
+    addr1 = getpointeraddress(module1 + 0x01C35950, Y_offsets)
+    addr2 = getpointeraddress(module1 + 0x01C35950, X_offsets)
+    if addr is not None:
+        try:
+            mem.write_int(addr, 0x0)
+            mem.write_int(addr1, 0x0)
+            mem.write_int(addr2, 0x0)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+
+
+def tele_keys():
+    addr = getpointeraddress(module1 + 0x01C35950, Z_offsets)
+    addr1 = getpointeraddress(module1 + 0x01C35950, Y_offsets)
+    addr2 = getpointeraddress(module1 + 0x01C35950, X_offsets)
+    if addr is not None:
+        try:
+            mem.write_int(addr, 0xbaf40305)
+            mem.write_int(addr1, 0xe3860117)
+            mem.write_int(addr2, 0x3f8fd600)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+
+
 # Are GUI
 pygame.init()
 pygame.mixer_music.load("music/mod.mp3")
@@ -289,6 +329,10 @@ button3 = tk.Button(root, text="Fuck Gravity", bg='black', fg='white', command=m
 button3.grid(row=3, column=1)
 button4 = tk.Button(root, text="No Clip", bg='black', fg='white', command=multi_run_clip2)
 button4.grid(row=4, column=1)
+button5 = tk.Button(root, text="Tele up", bg='black', fg='white', command=tele_up)
+button5.grid(row=5, column=1)
+button5 = tk.Button(root, text="Tele keys", bg='black', fg='white', command=tele_keys)
+button5.grid(row=6, column=1)
 
 # Labels
 label1 = tk.Label(master=root, text='- Show GUI', bg='red', fg='black')
