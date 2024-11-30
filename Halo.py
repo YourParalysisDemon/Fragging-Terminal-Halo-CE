@@ -42,6 +42,7 @@ primary_offsets2 = [0X28A]
 shield_offsets2 = [0XA0]
 fire_rate_offsets2 = [0X23A]
 plasma_ammo_offsets2 = []
+noclip_offsets2 = [0X4D8]
 
 
 def getpointeraddress(base, offsets):
@@ -64,8 +65,13 @@ def multi_run_0ld_117():
     new_thread.start()
 
 
-def multi_run_old117():
-    new_thread = Thread(target=oldJohn117, daemon=True)
+def multi_run_gravity2():
+    new_thread = Thread(target=fuck_gravity2, daemon=True)
+    new_thread.start()
+
+
+def multi_run_clip2():
+    new_thread = Thread(target=fuck_walls2, daemon=True)
     new_thread.start()
 
 
@@ -160,7 +166,33 @@ def fuck_walls():
 
 
 def fuck_gravity():
-    addr1 = getpointeraddress(module1 + 0x01C35AB0, noclip_offsets)
+    addr1 = getpointeraddress(module1 + 0x01C35950, noclip_offsets2)
+
+    while 1:
+        try:
+            mem.write_int(addr1, 0x244)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("C"):
+            mem.write_int(addr1, 0x0)
+            break
+
+
+def fuck_walls2():
+    addr1 = getpointeraddress(module1 + 0x01C35950, noclip_offsets2)
+
+    while 1:
+        try:
+            mem.write_int(addr1, 0xFFFF)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("C"):
+            mem.write_int(addr1, 0x0)
+            break
+
+
+def fuck_gravity2():
+    addr1 = getpointeraddress(module1 + 0x01C35950, noclip_offsets2)
 
     while 1:
         try:
@@ -251,8 +283,12 @@ button5.grid(row=7, column=0)
 # old graphics
 button1 = tk.Button(root, text="Bullet go brrr", bg='black', fg='white', command=multi_run_0ld_117)
 button1.grid(row=1, column=1)
-button5 = tk.Button(root, text="Speed", bg='black', fg='white', command=multi_run_speed)
-button5.grid(row=2, column=1)
+button2 = tk.Button(root, text="Speed", bg='black', fg='white', command=multi_run_speed)
+button2.grid(row=2, column=1)
+button3 = tk.Button(root, text="Fuck Gravity", bg='black', fg='white', command=multi_run_gravity2)
+button3.grid(row=3, column=1)
+button4 = tk.Button(root, text="No Clip", bg='black', fg='white', command=multi_run_clip2)
+button4.grid(row=4, column=1)
 
 # Labels
 label1 = tk.Label(master=root, text='- Show GUI', bg='red', fg='black')
