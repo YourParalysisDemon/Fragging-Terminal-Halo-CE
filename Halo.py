@@ -8,7 +8,7 @@ from pymem import *
 from pymem.process import *
 from pymem.ptypes import RemotePointer
 
-# Password 
+# Password
 while True:
     password = input("Enter password ")
     if password == "117":
@@ -19,6 +19,7 @@ while True:
 
 # Game were hacking
 mem = Pymem("MCC-Win64-Shipping")
+
 # DLL of said game
 module1 = module_from_name(mem.process_handle, "halo1.dll").lpBaseOfDll
 
@@ -38,11 +39,9 @@ bullet_spread_offsets = [0X1B]
 
 # Old graphics 01C38900
 primary_offsets2 = [0X28A]
-shield_offsets2 = []
-plasma_fire_rate_offsets2 = []
-plasma_ammo_offsets2 = []
+shield_offsets2 = [0XA0]
 fire_rate_offsets2 = [0X23A]
-
+plasma_ammo_offsets2 = []
 
 
 def getpointeraddress(base, offsets):
@@ -54,9 +53,19 @@ def getpointeraddress(base, offsets):
             return remote_pointer.value + offset
 
 
-# Threads 
+# Threads
 def multi_run_117():
     new_thread = Thread(target=John117, daemon=True)
+    new_thread.start()
+
+
+def multi_run_0ld_117():
+    new_thread = Thread(target=oldJohn117, daemon=True)
+    new_thread.start()
+
+
+def multi_run_old117():
+    new_thread = Thread(target=oldJohn117, daemon=True)
     new_thread.start()
 
 
@@ -85,7 +94,7 @@ def multi_run_speed():
     new_thread.start()
 
 
-# Functions 
+# Functions
 def John117():
     addr1 = getpointeraddress(module1 + 0x01C38880, primary_offsets)
     addr2 = getpointeraddress(module1 + 0x01C38880, fire_rate_offsets)
@@ -101,6 +110,26 @@ def John117():
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("F1"):
+            mem.write_int(addr2, 0x3f800000)
+            mem.write_int(addr3, 0x3f800000)
+            break
+
+
+def oldJohn117():
+    addr1 = getpointeraddress(module1 + 0x01C38900, primary_offsets2)
+    addr2 = getpointeraddress(module1 + 0x01C38900, fire_rate_offsets2)
+    addr3 = getpointeraddress(module1 + 0x01C35950, shield_offsets2)
+
+    while 1:
+        try:
+            mem.write_int(addr1, 0x100)
+            mem.write_int(addr2, 0xFFFFFFFF)
+            mem.write_int(addr3, 0x47960000)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("F1"):
+            mem.write_int(addr2, 0x3f800000)
+            mem.write_int(addr3, 0x3f800000)
             break
 
 
@@ -177,7 +206,7 @@ def plasma():
             break
 
 
-# Are GUI 
+# Are GUI
 pygame.init()
 pygame.mixer_music.load("music/mod.mp3")
 pygame.mixer_music.play(1)
@@ -188,7 +217,7 @@ root.wm_iconphoto(False, photo)
 root.attributes("-topmost", True)
 root.title("Fragging Terminal")
 root.configure(background='dark red')
-root.geometry("265x230")
+root.geometry("350x230")
 
 
 def callback(url):
@@ -203,6 +232,7 @@ def hide():
     root.withdraw()
 
 
+# New graphics
 button1 = tk.Button(root, text="Bullet go brrr", bg='black', fg='white', command=multi_run_117)
 button1.grid(row=1, column=0)
 button2 = tk.Button(root, text="No Clip", bg='black', fg='white', command=multi_run_clip)
@@ -217,6 +247,14 @@ button5 = tk.Button(root, text="Speed", bg='black', fg='white', command=multi_ru
 button5.grid(row=6, column=0)
 button5 = tk.Button(root, text="Exit", bg='white', fg='black', command=root.destroy)
 button5.grid(row=7, column=0)
+
+# old graphics
+button1 = tk.Button(root, text="Bullet go brrr", bg='black', fg='white', command=multi_run_0ld_117)
+button1.grid(row=1, column=1)
+button5 = tk.Button(root, text="Speed", bg='black', fg='white', command=multi_run_speed)
+button5.grid(row=2, column=1)
+
+# Labels
 label1 = tk.Label(master=root, text='- Show GUI', bg='red', fg='black')
 label1.grid(row=0, column=3)
 label2 = tk.Label(master=root, text='+ Hide GUI', bg='red', fg='black')
@@ -231,12 +269,17 @@ label5 = tk.Label(master=root, text='V No Clip', bg='red', fg='black')
 label5.grid(row=5, column=3)
 label5 = tk.Label(master=root, text='C turn on gravity', bg='red', fg='black')
 label5.grid(row=6, column=3)
-label6 = tk.Label(master=root, text='Main Loops', bg='red', fg='black')
+label6 = tk.Label(master=root, text='New graphics', bg='red', fg='black')
 label6.grid(row=0, column=0)
+label7 = tk.Label(master=root, text='Old graphics', bg='red', fg='black')
+label7.grid(row=0, column=1)
+
+# Links
 link1 = tk.Label(root, text="Your Sleep Paralysis Demon", bg="black", fg="red", cursor="hand2")
 link1.grid(row=8, column=0)
 link1.bind("<Button-1>", lambda e: callback("https://steamcommunity.com/profiles/76561198259829950/"))
-# Hot keys 
+
+# Hot keys
 keyboard.add_hotkey("-", show)
 keyboard.add_hotkey("+", hide)
 keyboard.add_hotkey("5", multi_run_117)
