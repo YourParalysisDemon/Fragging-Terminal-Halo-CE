@@ -38,6 +38,8 @@ melee1_offsets = [0X512]
 melee2_offsets = [0X513]
 player_speed_offsets = [0X10C]
 bullet_spread_offsets = [0X1B]
+scared = [0X34]  # 01C40480
+pause = [0X38]  # 01C40480
 
 # Old graphics 01C38900
 primary_offsets2 = [0X28A]
@@ -48,6 +50,7 @@ noclip_offsets2 = [0X4D8]
 X_offsets = [0X1C]  # 01C35950
 Y_offsets = [0X18]  # 01C35950
 Z_offsets = [0X20]
+health2 = [0X68, 0X9C]
 
 
 def getpointeraddress(base, offsets):
@@ -105,6 +108,16 @@ def multi_run_speed():
     new_thread.start()
 
 
+def multi_run_stats():
+    new_thread = Thread(target=stats, daemon=True)
+    new_thread.start()
+
+
+def multi_run_pause():
+    new_thread = Thread(target=pause_game, daemon=True)
+    new_thread.start()
+
+
 # Functions
 def John117():
     addr1 = getpointeraddress(module1 + 0x01C38880, primary_offsets)
@@ -130,17 +143,20 @@ def oldJohn117():
     addr1 = getpointeraddress(module1 + 0x01C38900, primary_offsets2)
     addr2 = getpointeraddress(module1 + 0x01C38900, fire_rate_offsets2)
     addr3 = getpointeraddress(module1 + 0x01C35950, shield_offsets2)
+    addr4 = getpointeraddress(module1 + 0x02D9C828, health2)
 
     while 1:
         try:
             mem.write_int(addr1, 0x100)
             mem.write_int(addr2, 0xFFFFFFFF)
             mem.write_int(addr3, 0x47960000)
+            mem.write_int(addr4, 0x42c80000)
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("F1"):
             mem.write_int(addr2, 0x3f800000)
             mem.write_int(addr3, 0x3f800000)
+            mem.write_int(addr4, 0x3f800000)
             break
 
 
@@ -206,6 +222,19 @@ def fuck_gravity2():
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("C"):
             mem.write_int(addr1, 0x0)
+            break
+
+
+def pause_game():
+    addr1 = getpointeraddress(module1 + 0x01C40480, pause)
+
+    while 1:
+        try:
+            mem.write_int(addr1, 0x0)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("F1"):
+            mem.write_int(addr1, 0x1)
             break
 
 
@@ -282,12 +311,19 @@ def tele_keys():
 
 def stats():
     Reader = getpointeraddress(module1 + 0x01C35950, Z_offsets)
+    Reader1 = getpointeraddress(module1 + 0x01C35950, Y_offsets)
+    Reader2 = getpointeraddress(module1 + 0x01C35950, X_offsets)
+
     while 1:
         try:
-            mem.read_int(Reader)
-            print(Reader)
+            mem.read_float(Reader)
+            mem.read_float(Reader1)
+            mem.read_float(Reader2)
+            print(Reader, Reader1, Reader2)
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("F1"):
+            break
 
 
 def clock():
@@ -332,50 +368,72 @@ def hide():
 # New graphics
 button1 = tk.Button(root, text="Bullet go brrr", bg='black', fg='white', command=multi_run_117)
 button1.grid(row=1, column=0)
+
 button2 = tk.Button(root, text="No Clip", bg='black', fg='white', command=multi_run_clip)
 button2.grid(row=3, column=0)
+
 button3 = tk.Button(root, text="Plasma go brrr", bg='black', fg='white', command=multi_run_plasma)
 button3.grid(row=2, column=0)
+
 button3 = tk.Button(root, text="Fuck Gravity", bg='black', fg='white', command=multi_run_gravity)
 button3.grid(row=4, column=0)
+
 button4 = tk.Button(root, text="Throw Hands", bg='black', fg='white', command=multi_run_hands)
 button4.grid(row=5, column=0)
+
 button5 = tk.Button(root, text="Speed", bg='black', fg='white', command=multi_run_speed)
 button5.grid(row=6, column=0)
+
 button5 = tk.Button(root, text="Exit", bg='white', fg='black', command=root.destroy)
 button5.grid(row=7, column=0)
 
 # old graphics
 button1 = tk.Button(root, text="Bullet go brrr", bg='black', fg='white', command=multi_run_0ld_117)
 button1.grid(row=1, column=1)
+
 button2 = tk.Button(root, text="Speed", bg='black', fg='white', command=multi_run_speed)
 button2.grid(row=2, column=1)
+
 button3 = tk.Button(root, text="Fuck Gravity", bg='black', fg='white', command=multi_run_gravity2)
 button3.grid(row=3, column=1)
+
 button4 = tk.Button(root, text="No Clip", bg='black', fg='white', command=multi_run_clip2)
 button4.grid(row=4, column=1)
+
 button5 = tk.Button(root, text="Tele up", bg='black', fg='white', command=tele_up)
 button5.grid(row=5, column=1)
-button5 = tk.Button(root, text="Tele keys", bg='black', fg='white', command=stats)
-button5.grid(row=6, column=1)
+
+button6 = tk.Button(root, text="XYZ Stats", bg='black', fg='white', command=multi_run_stats)
+button6.grid(row=6, column=1)
+
+button7 = tk.Button(root, text="Pause", bg='black', fg='white', command=multi_run_pause)
+button7.grid(row=7, column=1)
 
 # Labels
 label1 = tk.Label(master=root, text='- Show GUI', bg='red', fg='black')
 label1.grid(row=0, column=3)
+
 label2 = tk.Label(master=root, text='+ Hide GUI', bg='red', fg='black')
 label2.grid(row=1, column=3)
+
 label3 = tk.Label(master=root, text='F1 KILLS LOOPS', bg='red', fg='black')
 label3.grid(row=2, column=3)
+
 label4 = tk.Label(master=root, text='5 Gun go brrr', bg='red', fg='black')
 label4.grid(row=3, column=3)
+
 label5 = tk.Label(master=root, text='K KILL EXE', bg='red', fg='black')
 label5.grid(row=4, column=3)
+
 label5 = tk.Label(master=root, text='V No Clip', bg='red', fg='black')
 label5.grid(row=5, column=3)
+
 label5 = tk.Label(master=root, text='C turn on gravity', bg='red', fg='black')
 label5.grid(row=6, column=3)
+
 label6 = tk.Label(master=root, text='New graphics', bg='red', fg='black')
 label6.grid(row=0, column=0)
+
 label7 = tk.Label(master=root, text='Old graphics', bg='red', fg='black')
 label7.grid(row=0, column=1)
 # Clock
