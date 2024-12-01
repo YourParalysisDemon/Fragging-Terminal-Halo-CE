@@ -7,6 +7,8 @@ from threading import Thread
 from pymem import *
 from pymem.process import *
 from pymem.ptypes import RemotePointer
+from time import *
+from tkinter import *
 
 # Password
 while True:
@@ -278,6 +280,29 @@ def tele_keys():
             print(f"Error writing memory: {e}")
 
 
+def stats():
+    Reader = getpointeraddress(module1 + 0x01C35950, Z_offsets)
+    while 1:
+        try:
+            mem.read_int(Reader)
+            print(Reader)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+
+
+def clock():
+    time_string = strftime("%I:%M:%S %p")
+    time_label.config(text=time_string)
+
+    day_string = strftime("%A")
+    day_label.config(text=day_string)
+
+    date_string = strftime("%B %d, %Y")
+    date_label.config(text=date_string)
+
+    root.after(1000, clock)
+
+
 # Are GUI
 pygame.init()
 pygame.mixer_music.load("music/mod.mp3")
@@ -289,7 +314,7 @@ root.wm_iconphoto(False, photo)
 root.attributes("-topmost", True)
 root.title("Fragging Terminal")
 root.configure(background='dark red')
-root.geometry("350x230")
+root.geometry("350x255")
 
 
 def callback(url):
@@ -331,7 +356,7 @@ button4 = tk.Button(root, text="No Clip", bg='black', fg='white', command=multi_
 button4.grid(row=4, column=1)
 button5 = tk.Button(root, text="Tele up", bg='black', fg='white', command=tele_up)
 button5.grid(row=5, column=1)
-button5 = tk.Button(root, text="Tele keys", bg='black', fg='white', command=tele_keys)
+button5 = tk.Button(root, text="Tele keys", bg='black', fg='white', command=stats)
 button5.grid(row=6, column=1)
 
 # Labels
@@ -353,6 +378,17 @@ label6 = tk.Label(master=root, text='New graphics', bg='red', fg='black')
 label6.grid(row=0, column=0)
 label7 = tk.Label(master=root, text='Old graphics', bg='red', fg='black')
 label7.grid(row=0, column=1)
+# Clock
+time_label = Label(root, font=("Arial", 10), fg="Black", bg="Red")
+time_label.grid(row=8 , column=3)
+
+day_label = Label(root, font=("Arial", 10), fg="Black", bg="Red")
+day_label.grid(row=9 , column=3)
+
+date_label = Label(root, font=("Arial", 10), fg="Black", bg="Red")
+date_label.grid(row=7 , column=3)
+
+clock()
 
 # Links
 link1 = tk.Label(root, text="Your Sleep Paralysis Demon", bg="black", fg="red", cursor="hand2")
