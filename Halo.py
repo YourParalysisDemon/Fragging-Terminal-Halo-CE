@@ -380,13 +380,13 @@ label7 = tk.Label(master=root, text='Old graphics', bg='red', fg='black')
 label7.grid(row=0, column=1)
 # Clock
 time_label = Label(root, font=("Arial", 10), fg="Black", bg="Red")
-time_label.grid(row=8 , column=3)
+time_label.grid(row=8, column=3)
 
 day_label = Label(root, font=("Arial", 10), fg="Black", bg="Red")
-day_label.grid(row=9 , column=3)
+day_label.grid(row=9, column=3)
 
 date_label = Label(root, font=("Arial", 10), fg="Black", bg="Red")
-date_label.grid(row=7 , column=3)
+date_label.grid(row=7, column=3)
 
 clock()
 
