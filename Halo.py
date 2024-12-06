@@ -41,7 +41,7 @@ bullet_spread_offsets = [0X1B]
 scared = [0X34]  # 01C40480
 pause = [0X38]  # 01C40480
 
-# Old graphics 01C38900
+# Old graphics 01C38900 this game is janky as fuck
 primary_offsets2 = [0X28A]
 shield_offsets2 = [0XA0]
 fire_rate_offsets2 = [0X23A]
@@ -118,6 +118,11 @@ def multi_run_pause():
     new_thread.start()
 
 
+def multi_run_haha():
+    new_thread = Thread(target=haha_number_go_brrr, daemon=True)
+    new_thread.start()
+
+
 # Functions
 def John117():
     addr1 = getpointeraddress(module1 + 0x01C38880, primary_offsets)
@@ -143,20 +148,17 @@ def oldJohn117():
     addr1 = getpointeraddress(module1 + 0x01C38900, primary_offsets2)
     addr2 = getpointeraddress(module1 + 0x01C38900, fire_rate_offsets2)
     addr3 = getpointeraddress(module1 + 0x01C35950, shield_offsets2)
-    addr4 = getpointeraddress(module1 + 0x02D9C828, health2)
 
     while 1:
         try:
             mem.write_int(addr1, 0x100)
             mem.write_int(addr2, 0xFFFFFFFF)
             mem.write_int(addr3, 0x47960000)
-            mem.write_int(addr4, 0x42c80000)
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("F1"):
             mem.write_int(addr2, 0x3f800000)
             mem.write_int(addr3, 0x3f800000)
-            mem.write_int(addr4, 0x3f800000)
             break
 
 
@@ -230,7 +232,22 @@ def pause_game():
 
     while 1:
         try:
-            mem.write_int(addr1, 0x0)
+            mem.write_int(addr1, 0x00000000)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("F1"):
+            mem.write_int(addr1, 0x1)
+            break
+
+
+def haha_number_go_brrr():
+    addr1 = getpointeraddress(module1 + 0x01C40480, pause)
+    addr2 = getpointeraddress(module1 + 0x01C40480, pause)
+
+    while 1:
+        try:
+            mem.write_int(addr1, 0x00000000)
+            mem.write_int(addr2, 0x1)
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("F1"):
@@ -408,6 +425,9 @@ button6.grid(row=6, column=1)
 
 button7 = tk.Button(root, text="Pause", bg='black', fg='white', command=multi_run_pause)
 button7.grid(row=7, column=1)
+
+button8 = tk.Button(root, text="Confuse NPC", bg='black', fg='white', command=multi_run_haha)
+button8.grid(row=8, column=1)
 
 # Labels
 label1 = tk.Label(master=root, text='- Show GUI', bg='red', fg='black')
