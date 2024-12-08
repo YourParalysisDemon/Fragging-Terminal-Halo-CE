@@ -38,8 +38,10 @@ melee1_offsets = [0X512]
 melee2_offsets = [0X513]
 player_speed_offsets = [0X10C]
 bullet_spread_offsets = [0X1B]
+bullet_spread_offsets_2 = [0X1F]  # 01C38880/0x434800c8
 scared = [0X34]  # 01C40480
 pause = [0X38]  # 01C40480
+animation = [0x0]  # 02D9CD90  
 
 # Old graphics 01C38900 this game is janky as fuck
 primary_offsets2 = [0X28A]
@@ -113,6 +115,16 @@ def multi_run_stats():
     new_thread.start()
 
 
+def multi_run_nospread():
+    new_thread = Thread(target=no_spread, daemon=True)
+    new_thread.start()
+
+
+def multi_run_bullet():
+    new_thread = Thread(target=stats, daemon=True)
+    new_thread.start()
+
+
 def multi_run_pause():
     new_thread = Thread(target=pause_game, daemon=True)
     new_thread.start()
@@ -141,6 +153,32 @@ def John117():
         if keyboard.is_pressed("F1"):
             mem.write_int(addr2, 0x3f800000)
             mem.write_int(addr3, 0x3f800000)
+            break
+
+
+def no_spread():
+    addr1 = getpointeraddress(module1 + 0x01C38880, bullet_spread_offsets_2)
+
+    while 1:
+        try:
+            mem.write_int(addr1, 0x434800c8)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("F1"):
+            mem.write_int(addr1, 0x0)
+            break
+
+
+def wall_pierce():
+    addr1 = getpointeraddress(module1 + 0x01C38880, bullet_spread_offsets)
+
+    while 1:
+        try:
+            mem.write_int(addr1, 0x00000164)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("F1"):
+            mem.write_int(addr1, 0x0)
             break
 
 
