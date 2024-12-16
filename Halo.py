@@ -31,6 +31,8 @@ fire_rate_offsets = [0X23A]
 shield_offsets = [0XA0]
 plasma_fire_rate_offsets = [0X204]
 plasma_ammo_offsets = [0X208]
+trig_offsets = [0X22C]  # 01C38880
+shotgun_trig_offsets = [0X280]
 
 # These fucking sucked to find
 noclip_offsets = [0X4D8]
@@ -135,6 +137,11 @@ def multi_run_haha():
     new_thread.start()
 
 
+def multi_run_shotgun():
+    new_thread = Thread(target=shotgun, daemon=True)
+    new_thread.start()
+
+
 # Functions
 def John117():
     addr1 = getpointeraddress(module1 + 0x01C38880, primary_offsets)
@@ -156,12 +163,34 @@ def John117():
             break
 
 
-def no_spread():
-    addr1 = getpointeraddress(module1 + 0x01C38880, bullet_spread_offsets_2)
+def shotgun():
+    addr1 = getpointeraddress(module1 + 0x01C38880, primary_offsets)
+    addr2 = getpointeraddress(module1 + 0x01C38880, shotgun_trig_offsets)
+    addr3 = getpointeraddress(module1 + 0x01C38880, fire_rate_offsets)
 
     while 1:
         try:
-            mem.write_int(addr1, 0x434800c8)
+            mem.write_int(addr1, 0x100)
+            mem.write_int(addr2, 0x0)
+            mem.write_int(addr3, 0xFFFFFFFF)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("F1"):
+            break
+
+
+def no_spread():
+    addr1 = getpointeraddress(module1 + 0x01C38880, bullet_spread_offsets_2)
+    addr2 = getpointeraddress(module1 + 0x01C38880, trig_offsets)
+    addr3 = getpointeraddress(module1 + 0x01C38880, shotgun_trig_offsets)
+    addr4 = getpointeraddress(module1 + 0x01C38880, fire_rate_offsets)
+
+    while 1:
+        try:
+            mem.write_int(addr1, 0x000000c8)
+            mem.write_int(addr2, 0x1)
+            mem.write_int(addr3, 0x0)
+            mem.write_int(addr4, 0xFFFFFFFF)
         except pymem.exception.MemoryWriteError as e:
             print(f"Error writing memory: {e}")
         if keyboard.is_pressed("F1"):
@@ -405,7 +434,7 @@ root.wm_iconphoto(False, photo)
 root.attributes("-topmost", True)
 root.title("Fragging Terminal")
 root.configure(background='dark red')
-root.geometry("350x255")
+root.geometry("350x275")
 
 
 def callback(url):
@@ -439,8 +468,14 @@ button4.grid(row=5, column=0)
 button5 = tk.Button(root, text="Speed", bg='black', fg='white', command=multi_run_speed)
 button5.grid(row=6, column=0)
 
-button5 = tk.Button(root, text="Exit", bg='white', fg='black', command=root.destroy)
-button5.grid(row=7, column=0)
+button6 = tk.Button(root, text="No Spread", bg='black', fg='white', command=multi_run_nospread)
+button6.grid(row=7, column=0)
+
+button7 = tk.Button(root, text="Shotgun", bg='black', fg='white', command=multi_run_shotgun)
+button7.grid(row=8, column=0)
+
+button8 = tk.Button(root, text="Exit", bg='white', fg='black', command=root.destroy)
+button8.grid(row=9, column=0)
 
 # old graphics
 button1 = tk.Button(root, text="Bullet go brrr", bg='black', fg='white', command=multi_run_0ld_117)
@@ -508,7 +543,7 @@ clock()
 
 # Links
 link1 = tk.Label(root, text="Your Sleep Paralysis Demon", bg="black", fg="red", cursor="hand2")
-link1.grid(row=8, column=0)
+link1.grid(row=10, column=0)
 link1.bind("<Button-1>", lambda e: callback("https://steamcommunity.com/profiles/76561198259829950/"))
 
 # Hot keys
