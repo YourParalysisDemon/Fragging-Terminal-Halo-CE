@@ -467,7 +467,7 @@ photo = tk.PhotoImage(file="back/155.png")
 root.wm_iconphoto(False, photo)
 root.attributes("-topmost", True)
 root.title("Fragging Terminal")
-root.geometry("300x400")
+root.geometry("300x450")
 
 
 def callback(url):
