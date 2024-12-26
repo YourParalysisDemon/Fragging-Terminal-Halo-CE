@@ -20,10 +20,10 @@ while True:
         print("Try again retard")
 
 # Game were hacking
-# mem = Pymem("MCC-Win64-Shipping")
+mem = Pymem("MCC-Win64-Shipping")
 
 # DLL of said game
-# module1 = module_from_name(mem.process_handle, "halo1.dll").lpBaseOfDll
+module1 = module_from_name(mem.process_handle, "halo1.dll").lpBaseOfDll
 
 # New graphics
 primary_offsets = [0X28A]
