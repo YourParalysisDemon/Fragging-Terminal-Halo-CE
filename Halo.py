@@ -10,7 +10,6 @@ from pymem.ptypes import RemotePointer
 from time import *
 from tkinter import ttk
 
-
 # Password
 while True:
     password = input("Enter password ")
@@ -21,10 +20,10 @@ while True:
         print("Try again retard")
 
 # Game were hacking
-mem = Pymem("MCC-Win64-Shipping")
+# mem = Pymem("MCC-Win64-Shipping")
 
 # DLL of said game
-module1 = module_from_name(mem.process_handle, "halo1.dll").lpBaseOfDll
+# module1 = module_from_name(mem.process_handle, "halo1.dll").lpBaseOfDll
 
 # New graphics
 primary_offsets = [0X28A]
@@ -487,8 +486,8 @@ style = ttk.Style()
 style.theme_use("classic")
 style.configure("TNotebook.Tab", background="black", foreground="red")
 style.map("TNotebook.Tab",
-          background=[("active", "gray"), ("disabled", "black")],
-          foreground=[("active", "red"), ("disabled", "gray")])
+          background=[("pressed", "black"), ("disabled", "red")],
+          foreground=[("pressed", "red"), ("disabled", "white")])
 
 # notebook (tab control)
 notebook = ttk.Notebook(root)
@@ -505,47 +504,49 @@ notebook.add(tab2, text='Old Graphics')
 notebook.add(tab3, text='Dev/Info')
 
 # first tab
-button1_tab1 = tk.Button(tab1, text="Health", bg='black', fg='white', command=multi_run_new_health)
+button1_tab1 = tk.Button(tab1, text="Health", bg='black', fg='white', cursor="cross", command=multi_run_new_health)
 button1_tab1.pack(pady=10)
 
-button2_tab1 = tk.Button(tab1, text="UNSC Fire rate", bg='black', fg='white', command=multi_run_117)
+button2_tab1 = tk.Button(tab1, text="UNSC Fire rate", bg='black', fg='white', cursor="cross", command=multi_run_117)
 button2_tab1.pack(pady=10)
 
-button3_tab1 = tk.Button(tab1, text="Covenant Fire rate", bg='black', fg='white', command=multi_run_plasma)
+button3_tab1 = tk.Button(tab1, text="Covenant Fire rate", bg='black', fg='white', cursor="cross",
+                         command=multi_run_plasma)
 button3_tab1.pack(pady=10)
 
-button4_tab1 = tk.Button(tab1, text="Bullet Pierce", bg='black', fg='white', command=multi_run_wall_pierce)
+button4_tab1 = tk.Button(tab1, text="Bullet Pierce", bg='black', fg='white', cursor="cross",
+                         command=multi_run_wall_pierce)
 button4_tab1.pack(pady=10)
 
-button5_tab1 = tk.Button(tab1, text="No Spread", bg='black', fg='white', command=multi_run_nospread)
+button5_tab1 = tk.Button(tab1, text="No Spread", bg='black', fg='white', cursor="cross", command=multi_run_nospread)
 button5_tab1.pack(pady=10)
 
-button6_tab1 = tk.Button(tab1, text="Shotgun", bg='black', fg='white', command=multi_run_shotgun)
+button6_tab1 = tk.Button(tab1, text="Shotgun", bg='black', fg='white', cursor="cross", command=multi_run_shotgun)
 button6_tab1.pack(pady=10)
 
-button7_tab1 = tk.Button(tab1, text="Throw Hands", bg='black', fg='white', command=multi_run_hands)
+button7_tab1 = tk.Button(tab1, text="Throw Hands", bg='black', fg='white', cursor="cross", command=multi_run_hands)
 button7_tab1.pack(pady=10)
 
-button8_tab1 = tk.Button(tab1, text="No Clip", bg='black', fg='white', command=multi_run_clip)
+button8_tab1 = tk.Button(tab1, text="No Clip", bg='black', fg='white', cursor="cross", command=multi_run_clip)
 button8_tab1.pack(pady=10)
 
-button9_tab1 = tk.Button(tab1, text="Speed", bg='black', fg='white', command=multi_run_speed)
+button9_tab1 = tk.Button(tab1, text="Speed", bg='black', fg='white', cursor="cross", command=multi_run_speed)
 button9_tab1.pack(pady=10)
 
 # second tab
-button1_tab2 = tk.Button(tab2, text="Health", bg='black', fg='white', command=multi_run_old_health)
+button1_tab2 = tk.Button(tab2, text="Health", bg='black', fg='white', cursor="cross", command=multi_run_old_health)
 button1_tab2.pack(pady=10)
 
-button2_tab2 = tk.Button(tab2, text="UNSC Fire rate", bg='black', fg='white', command=multi_run_0ld_117)
+button2_tab2 = tk.Button(tab2, text="UNSC Fire rate", bg='black', fg='white', cursor="cross", command=multi_run_0ld_117)
 button2_tab2.pack(pady=10)
 
-button3_tab2 = tk.Button(tab2, text="Speed", bg='black', fg='white', command=multi_run_speed)
+button3_tab2 = tk.Button(tab2, text="Speed", bg='black', fg='white', cursor="cross", command=multi_run_speed)
 button3_tab2.pack(pady=10)
 
-button4_tab2 = tk.Button(tab2, text="Confuse NPC", bg='black', fg='white', command=multi_run_haha)
+button4_tab2 = tk.Button(tab2, text="Confuse NPC", bg='black', fg='white', cursor="cross", command=multi_run_haha)
 button4_tab2.pack(pady=10)
 
-button5_tab2 = tk.Button(tab2, text="Pause", bg='black', fg='white', command=multi_run_pause)
+button5_tab2 = tk.Button(tab2, text="Pause", bg='black', fg='white', cursor="cross", command=multi_run_pause)
 button5_tab2.pack(pady=10)
 
 # third tab
@@ -563,7 +564,7 @@ date_label.pack(pady=10)
 
 clock()
 
-link1 = tab3 = tk.Label(tab3, text="Your Sleep Paralysis Demon", bg="black", fg="red", cursor="hand2")
+link1 = tab3 = tk.Label(tab3, text="Your Sleep Paralysis Demon", bg="black", fg="red", cursor="cross")
 link1.bind("<Button-1>", lambda e: callback("https://steamcommunity.com/profiles/76561198259829950/"))
 link1.pack(pady=10)
 
