@@ -1,6 +1,7 @@
 import keyboard
 import tkinter as tk
 import pygame
+import pymem.process
 import pymem.exception
 import webbrowser
 from threading import Thread
@@ -22,9 +23,13 @@ while True:
 # Game were hacking
 mem = Pymem("MCC-Win64-Shipping")
 
-# DLL of said game
-module1 = module_from_name(mem.process_handle, "halo1.dll").lpBaseOfDll
-module2 = module_from_name(mem.process_handle, "halo3.dll").lpBaseOfDll
+# DLL of said game. Halo 1 is game 1, Halo 3 is game 3 
+game = input("\nEnter game dll: ") 
+
+if game == "1":
+    module1 = module_from_name(mem.process_handle, "halo1.dll").lpBaseOfDll
+elif game == "3":
+    module2 = module_from_name(mem.process_handle, "halo3.dll").lpBaseOfDll
 
 # New graphics Halo 1
 primary_offsets = [0X28A]
@@ -34,6 +39,7 @@ plasma_fire_rate_offsets = [0X204]
 plasma_ammo_offsets = [0X208]
 trig_offsets = [0X22C]  # 01C38880
 shotgun_trig_offsets = [0X280]
+plasma_pistol_offsets = [0X144, 0XB5]
 
 # These fucking sucked to find Halo 1
 noclip_offsets = [0X4D8]
@@ -55,9 +61,11 @@ X_offsets = [0X1C]  # 01C35950
 Y_offsets = [0X18]  # 01C35950
 Z_offsets = [0X20]
 shield = [0X20, 0XB8, 0XC8, 0X998, 0X10, 0XA0]
+past_coords = None
 
 # Halo 3 offsets :)
 unsc_pistol_offsets = [0X23A]
+halo_3_shield_offsets = []
 
 
 def getpointeraddress(base, offsets):
@@ -69,7 +77,7 @@ def getpointeraddress(base, offsets):
             return remote_pointer.value + offset
 
 
-# Threads
+# Threads Halo CE
 def multi_run_117():
     new_thread = Thread(target=John117, daemon=True)
     new_thread.start()
@@ -156,6 +164,17 @@ def multi_run_new_health():
 
 
 def multi_run_wall_pierce():
+    new_thread = Thread(target=wall_pierce, daemon=True)
+    new_thread.start()
+
+
+def multi_run_plasma_pistol():
+    new_thread = Thread(target=plasma_pistol, daemon=True)
+    new_thread.start()
+
+
+# Threads Halo 3
+def halo_3_pistol():
     new_thread = Thread(target=wall_pierce, daemon=True)
     new_thread.start()
 
@@ -446,6 +465,22 @@ def stats():
             break
 
 
+def plasma_pistol():
+    addr = getpointeraddress(module1 + 0x01C38880, plasma_ammo_offsets)
+    addr2 = getpointeraddress(module1 + 0x02EABA18, plasma_pistol_offsets)
+    addr3 = getpointeraddress(module1 + 0x01C38880, plasma_fire_rate_offsets)
+
+    while 1:
+        try:
+            mem.write_int(addr, 0x3f4ccccd)
+            mem.write_int(addr2, 0x01050e03)
+            mem.write_int(addr3, 0xFFFFFFFF)
+        except pymem.exception.MemoryWriteError as e:
+            print(f"Error writing memory: {e}")
+        if keyboard.is_pressed("F1"):
+            break
+
+
 def clock():
     time_string = strftime("%I:%M:%S %p")
     time_label.config(text=time_string)
@@ -470,7 +505,7 @@ photo = tk.PhotoImage(file="back/155.png")
 root.wm_iconphoto(False, photo)
 root.attributes("-topmost", True)
 root.title("Fragging Terminal")
-root.geometry("300x450")
+root.geometry("340x450")
 
 
 def callback(url):
@@ -501,11 +536,13 @@ notebook.pack(expand=True, fill='both')
 tab1 = ttk.Frame(notebook)
 tab2 = ttk.Frame(notebook)
 tab3 = ttk.Frame(notebook)
+tab4 = ttk.Frame(notebook)
 
 # tabs to the notebook
-notebook.add(tab1, text='New Graphics')
-notebook.add(tab2, text='Old Graphics')
-notebook.add(tab3, text='Dev/Info')
+notebook.add(tab1, text='Halo CE New')
+notebook.add(tab2, text='Halo CE Old')
+notebook.add(tab3, text='Halo 3')
+notebook.add(tab4, text='Dev/Info')
 
 # first tab
 button1_tab1 = tk.Button(tab1, text="Health", bg='black', fg='white', cursor="cross", command=multi_run_new_health)
@@ -537,6 +574,10 @@ button8_tab1.pack(pady=10)
 button9_tab1 = tk.Button(tab1, text="Speed", bg='black', fg='white', cursor="cross", command=multi_run_speed)
 button9_tab1.pack(pady=10)
 
+button10_tab1 = tk.Button(tab1, text="Plasma Pistol", bg='black', fg='white', cursor="cross",
+                          command=multi_run_plasma_pistol)
+button10_tab1.pack(pady=10)
+
 # second tab
 button1_tab2 = tk.Button(tab2, text="Health", bg='black', fg='white', cursor="cross", command=multi_run_old_health)
 button1_tab2.pack(pady=10)
@@ -553,22 +594,26 @@ button4_tab2.pack(pady=10)
 button5_tab2 = tk.Button(tab2, text="Pause", bg='black', fg='white', cursor="cross", command=multi_run_pause)
 button5_tab2.pack(pady=10)
 
-# third tab
-label1_tab3 = tk.Label(tab3, text="Hello and thank you for using my software.")
-label1_tab3.pack(pady=10)
+button5_tab2 = tk.Button(tab2, text="Stats", bg='black', fg='white', cursor="cross", command=multi_run_stats)
+button5_tab2.pack(pady=10)
+
+# fourth tab
+label1_tab4 = tk.Label(tab4, text="Hello and thank you for using my software.")
+label1_tab4.pack(pady=10)
+
 # Clock
-time_label = tk.Label(tab3, font=("Arial", 10), fg="Black", bg="Red")
+time_label = tk.Label(tab4, font=("Arial", 10), fg="Black", bg="Red")
 time_label.pack(pady=10)
 
-day_label = tk.Label(tab3, font=("Arial", 10), fg="Black", bg="Red")
+day_label = tk.Label(tab4, font=("Arial", 10), fg="Black", bg="Red")
 day_label.pack(pady=10)
 
-date_label = tk.Label(tab3, font=("Arial", 10), fg="Black", bg="Red")
+date_label = tk.Label(tab4, font=("Arial", 10), fg="Black", bg="Red")
 date_label.pack(pady=10)
 
 clock()
 
-link1 = tab3 = tk.Label(tab3, text="Your Sleep Paralysis Demon", bg="black", fg="red", cursor="cross")
+link1 = tab4 = tk.Label(tab4, text="Your Sleep Paralysis Demon", bg="black", fg="red", cursor="cross")
 link1.bind("<Button-1>", lambda e: callback("https://steamcommunity.com/profiles/76561198259829950/"))
 link1.pack(pady=10)
 
